@@ -6,12 +6,12 @@ const User = require('../models/User')
 //Importar las herramientas a utilzar
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
-const {clearRes, createJWT} = require('../util/auth-mid');
+const {clearRes, createJWT} = require('../utils/auth-mid');
 
 //en este archivo se tendran 3 rutas, LOGIN, SIGNUP, LOGOUT
 
 router.post('/signup', function(req, res, next) {
-    const {email, name, password, confirmPassword} = req.body;
+    const {email, username, password, confirmPassword} = req.body;
 
     if(password != confirmPassword) {
         return res.status(403).json({msg:"Las contraseñas no coinciden"});
@@ -23,7 +23,7 @@ router.post('/signup', function(req, res, next) {
         const user = {
             email,
             password:hashedPass,
-            name
+            username
         }
         User.create(user)
         .then(userCreated=>{
