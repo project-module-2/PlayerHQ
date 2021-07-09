@@ -37,9 +37,11 @@ app.use(express.static(path.join(__dirname, 'public')));
 const indexRouter = require('./routes/index');
 const usersRouter = require('./routes/users');
 const authRouter = require('./routes/auth');
+const friendRequestRouter = require('./routes/friendRequests');
 
 app.use('/api', indexRouter);
 app.use('/api/users', usersRouter);
 app.use('/api/auth',authRouter);
+app.use('/api/friendRequests',friendRequestRouter);
 
 module.exports = app;

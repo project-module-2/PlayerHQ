@@ -29,7 +29,8 @@ router.post('/signup', function(req, res, next) {
         .then(userCreated=>{
             //Esto se va a pasar a utils por que se utilizara varias veces
             const newUser = clearRes(userCreated.toObject());
-            res.cookie('token', createJWT(userCreated),{
+            const token = createJWT(user);
+            res.cookie('token', token,{
                 expires: new Date(Date.now+86400000),
                 secure:false, //Si lo ponemos en true, esta cookie unicamente funciona con https
                 httpOnly:true //las cookies solo son accesibles por webserver
@@ -55,7 +56,8 @@ router.post('/login',(req,res)=>{
             //Si match es verdadero, nos logeamos
             if(match) {
                 const newUser = clearRes(user.toObject());
-                res.cookie('token', createJWT(user),{
+                const token = createJWT(user);
+                res.cookie('token', token,{
                     expires: new Date(Date.now+86400000),
                     secure:false, //Si lo ponemos en true, esta cookie unicamente funciona con https
                     httpOnly:true //las cookies solo son accesibles por webserver
@@ -65,7 +67,6 @@ router.post('/login',(req,res)=>{
                 return res.status(404).json({msg:'El correo o contraseña son erroneos'});
             }
         })
-
     })
     .catch(error=>res.status(400).json({error}));
 })

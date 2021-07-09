@@ -1,5 +1,4 @@
 const express = require('express');
-const { findByIdAndUpdate } = require('../models/User');
 const router = express.Router();
 //Importar los modelos necesarios
 const User = require('../models/User');
@@ -7,9 +6,18 @@ const User = require('../models/User');
 //Importamos los utils
 const {checkRole, veryToken} = require('../utils/auth-mid');
 
-//Encontrar todos los usuarios (que no sean admins), tiene que estar logueado
-router.get('/users', veryToken, (req, res, next) => {
-  User.find({$nor:[{role:'ADMIN'}]})
+//Encontrar usuarios
+router.get('/', veryToken, (req, res, next) => {
+  //Excluir su propio ID y los IDs de los usuarios que ha bloqueado
+  const excludedIds = [req.user._id, ...req.user._blocked];
+  const userId = req.user._id;
+  console.log(userId);
+  //Encontrar users que no tengan role de ADMIN y que no sean parte de los IDs excluidos
+  User.find({
+    $nor:[{role:'ADMIN'}],
+    _id: {$nin:excludedIds},
+    '_blocked': {"$ne":userId}
+  })
   .then(users => {
     res.status(200).json({result:users})
   })
@@ -19,7 +27,8 @@ router.get('/users', veryToken, (req, res, next) => {
 //Actualizar mi perfil
 router.patch('/editMyUser', veryToken, checkRole(['Admin','USER']), (req, res, next)=> {
   const{_id} = req.user;
-  const{role,...restUser} = req.body; //el role no se puede modificar
+  console.log(_id)
+  const{role, ...restUser} = req.body; //el role no se puede modificar
   User.findByIdAndUpdate(_id,restUser,{new:true})
   .then(user => {
     res.status(200).json({result:user})
@@ -50,5 +59,30 @@ router.delete('/:id/deleteUser', veryToken, checkRole(['Admin']), (req, res, nex
   })
   .catch( error => res.status(400).json({error}))
 });
+
+//Bloquear perfil
+router.patch('/blockUser/:id', veryToken, checkRole(['Admin']), (req, res, next)=> {
+  //Sacamos el parametro id del req.params
+  const{id} = req.params;
+
+  User.findByIdAndDelete(id)
+  .then(()=>{
+    res.status(200).json({msg:'Usuario borrado'})
+  })
+  .catch( error => res.status(400).json({error}))
+});
+
+//Desbloquear perfil
+router.patch('/unBlockUser/:id', veryToken, checkRole(['Admin']), (req, res, next)=> {
+  //Sacamos el parametro id del req.params
+  const{id} = req.params;
+
+  User.findByIdAndDelete(id)
+  .then(()=>{
+    res.status(200).json({msg:'Usuario borrado'})
+  })
+  .catch( error => res.status(400).json({error}))
+});
+
 
 module.exports = router;

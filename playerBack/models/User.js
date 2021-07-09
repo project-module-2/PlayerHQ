@@ -66,15 +66,7 @@ const userSchema = new Schema({
         type:Schema.Types.ObjectId,
         ref:"User"
     }],
-    _blockedBy:[{
-        type:Schema.Types.ObjectId,
-        ref:"User"
-    }],
     _partiesJoined:[{
-        type:Schema.Types.ObjectId,
-        ref:"Party"
-    }],
-    _partiesOwned:[{
         type:Schema.Types.ObjectId,
         ref:"Party"
     }],
