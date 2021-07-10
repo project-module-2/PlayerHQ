@@ -147,7 +147,7 @@ router.patch('/acceptFriendRequest/:id', veryToken, checkRole(['Admin','USER']),
 router.patch('/rejectFriendRequest /:id', veryToken, checkRole(['Admin','USER']), (req, res, next) => {
   FriendRequest.findByIdAndUpdate({_id: id} ,{status: "declined"}, {new:true})
   .then(() => {
-    res.status(200).json({msg:`Invitacion de amistad aceptada exitosamente!`});
+    res.status(200).json({msg:`Invitacion de amistad declinada exitosamente!`});
   })
   .catch( error => res.status(400).json({error}))
 });

@@ -28,7 +28,7 @@ router.get('/', veryToken, (req, res, next) => {
 router.patch('/editMyUser', veryToken, checkRole(['Admin','USER']), (req, res, next)=> {
   const{_id} = req.user;
   console.log(_id)
-  const{role, ...restUser} = req.body; //el role no se puede modificar
+  const{role, _friends, _blocked, ...restUser} = req.body; //el role no se puede modificar
   User.findByIdAndUpdate(_id,restUser,{new:true})
   .then(user => {
     res.status(200).json({result:user})
@@ -82,13 +82,13 @@ router.patch('/unBlockUser/:id', veryToken, checkRole(['Admin']), (req, res, nex
 
   User.findByIdAndUpdate({_id: req.user._id} ,{$pull:{_blocked:id}}, {new:true})
   .then(() => {
-    res.status(200).json({msg:`Se ha bloqueado el usuario exitosamente ${req.user._blocked}`});
+    res.status(200).json({msg:`Se ha desbloqueado el usuario exitosamente ${req.user._blocked}`});
   })
   .catch( error => res.status(400).json({error}));
 });
 
 //Eliminar amigo
-router.patch('/unBlockUser/:id', veryToken, checkRole(['Admin']), (req, res, next)=> {
+router.patch('/unFriend/:id', veryToken, checkRole(['Admin']), (req, res, next)=> {
   //Sacamos el parametro id del req.params
   const{id} = req.params;
 
