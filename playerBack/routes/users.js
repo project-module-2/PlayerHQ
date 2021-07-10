@@ -65,11 +65,12 @@ router.patch('/blockUser/:id', veryToken, checkRole(['Admin']), (req, res, next)
   //Sacamos el parametro id del req.params
   const{id} = req.params;
 
-  User.findByIdAndDelete(id)
-  .then(()=>{
-    res.status(200).json({msg:'Usuario borrado'})
+  User.findByIdAndUpdate({_id: req.user._id} ,{$push:{_blocked:id}}, {new:true})
+  .then(() => {
+    res.status(200).json({msg:`Se ha bloqueado el usuario exitosamente ${req.user._blocked}`});
   })
-  .catch( error => res.status(400).json({error}))
+  .catch( error => res.status(400).json({error}));
+
 });
 
 //Desbloquear perfil
@@ -77,11 +78,30 @@ router.patch('/unBlockUser/:id', veryToken, checkRole(['Admin']), (req, res, nex
   //Sacamos el parametro id del req.params
   const{id} = req.params;
 
-  User.findByIdAndDelete(id)
-  .then(()=>{
-    res.status(200).json({msg:'Usuario borrado'})
+  User.findByIdAndUpdate({_id: req.user._id} ,{$pull:{_blocked:id}}, {new:true})
+  .then(() => {
+    res.status(200).json({msg:`Se ha bloqueado el usuario exitosamente ${req.user._blocked}`});
   })
-  .catch( error => res.status(400).json({error}))
+  .catch( error => res.status(400).json({error}));
+
+});
+
+//Eliminar amigo
+router.patch('/unBlockUser/:id', veryToken, checkRole(['Admin']), (req, res, next)=> {
+  //Sacamos el parametro id del req.params
+  const{id} = req.params;
+
+  User.findByIdAndUpdate({_id: req.user._id} ,{$pull:{_friends:id}}, {new:true})
+  .then((user) => {
+    res.status(200).json({msg:`Se ha borrado a el usuario exitosamente ${user._friends}`});
+  })
+  .catch( error => res.status(400).json({error}));
+
+  User.findByIdAndUpdate({_id: id} ,{$pull:{_friends:req.user._id}}, {new:true})
+  .then((friend) => {
+    res.status(200).json({msg:`Se ha borrado a el usuario exitosamente ${friend._friends}`});
+  })
+  .catch( error => res.status(400).json({error}));
 });
 
 
