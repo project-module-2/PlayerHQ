@@ -1,7 +1,8 @@
 const express = require('express');
 const router = express.Router();
 //Importar los modelos necesarios
-const FriendRequest = require('../models/FriendRequest');
+const FriendRequest = require('../models/PartyRequests');
+const Party = require('../models/Party');
 const User = require('../models/User');
 
 //Importamos los utils
@@ -89,14 +90,14 @@ router.patch('/acceptFriendRequest/:id', veryToken, checkRole(['Admin','USER']),
   .then(request => {
     if(request.status == "pending") {
       //Validaciones
-      if(req.user._friends.includes(request._from)){
+      if(req.user._friends.includes(request._to)){
         FriendRequest.findByIdAndUpdate({_id: id} ,{status: "declined"}, {new:true})
         .then(() => {
           res.status(200).json({msg:"No puedes aceptar una solicitud de amistad a un usuario que ya es tu amigo"});
         })
         .catch( error => res.status(400).json({error}))
       }
-      else if(req.user._blocked.includes(request._from)){
+      else if(req.user._blocked.includes(request._to)){
         FriendRequest.findByIdAndUpdate({_id: id} ,{status: "declined"}, {new:true})
         .then(() => {
           res.status(200).json({msg:"No puedes aceptar una solicitud de amistad a un usuario bloqueado"});
@@ -104,7 +105,7 @@ router.patch('/acceptFriendRequest/:id', veryToken, checkRole(['Admin','USER']),
         .catch( error => res.status(400).json({error}))
       }
       else {
-        User.findById(myRequest._from)
+        User.findById(myRequest._to)
         .then(foundUser => {
           if(foundUser._blocked.includes(req.user._id)) {
             FriendRequest.findByIdAndUpdate({_id: id} ,{status: "declined"}, {new:true})

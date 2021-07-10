@@ -71,6 +71,8 @@ router.patch('/blockUser/:id', veryToken, checkRole(['Admin']), (req, res, next)
   })
   .catch( error => res.status(400).json({error}));
 
+  //Marcar solicitudes de amistad como declined
+  //Marcar invitaciones de party como declined
 });
 
 //Desbloquear perfil
@@ -83,7 +85,6 @@ router.patch('/unBlockUser/:id', veryToken, checkRole(['Admin']), (req, res, nex
     res.status(200).json({msg:`Se ha bloqueado el usuario exitosamente ${req.user._blocked}`});
   })
   .catch( error => res.status(400).json({error}));
-
 });
 
 //Eliminar amigo
@@ -104,5 +105,8 @@ router.patch('/unBlockUser/:id', veryToken, checkRole(['Admin']), (req, res, nex
   .catch( error => res.status(400).json({error}));
 });
 
+//Buscar la lista de parties de la cual pertenece el usuario
+
+//Buscar la lista de parties de la cual el usuario es dueño
 
 module.exports = router;
