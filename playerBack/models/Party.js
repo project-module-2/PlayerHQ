@@ -30,6 +30,10 @@ const partySchema = new Schema({
         enum:["casual","competitivo","esport"],
         max:50
     },
+    _owner:[{
+        type:Schema.Types.ObjectId,
+        ref:"User"
+    }],
     _members:[{
         type:Schema.Types.ObjectId,
         ref:"User"

@@ -6,7 +6,7 @@ const User = require('../models/User');
 //Creamos nuestro util
 exports.createJWT = (user) => {
     //Vamos a crear el token
-    const token = jwt.sign({id:User._id},process.env.SECRET,{
+    const token = jwt.sign({id:user._id},process.env.SECRET,{
         expiresIn:'1d'
     })
 
@@ -16,16 +16,17 @@ exports.createJWT = (user) => {
 //Este nos va a servir para verificar si tengo un usuario loggeado
 exports.veryToken = (req,res,next) => {
     const {token} = req.cookies
+
     jwt.verify(token, process.env.SECRET, (error, decoded)=>{
         //Va nuestro codigo si falla o esta correcto
         if(error){
-            return req.status(401),json({msg:'Tienes que tener una sesion',error})
+            return res.status(401).json({msg:'Tienes que tener una sesion',error})
         }
         User.findById(decoded.id)
             .then(user => {
                 req.user = user
+                next()
             })
-            next()
     });
 }
 

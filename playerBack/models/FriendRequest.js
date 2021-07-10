@@ -1,12 +1,7 @@
 const mongoose = require("mongoose");
 const {Schema, model} = mongoose;
 
-const requestSchema = new Schema({
-    type:{
-        type:String,
-        required:[true,"Debes agregar un tipo de request"],
-        enum:["friend","party"]
-    },
+const friendRequestSchema = new Schema({
     date:{
         type:String,
         required:[true,"Debes agregar una fecha"]
@@ -33,4 +28,4 @@ const requestSchema = new Schema({
     }
 },{timestapms:true})
 
-module.exports = model("Request",requestSchema);
+module.exports = model("FriendRequest",friendRequestSchema);
