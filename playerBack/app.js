@@ -36,12 +36,16 @@ app.use(express.static(path.join(__dirname, 'public')));
 //rutas
 const indexRouter = require('./routes/index');
 const usersRouter = require('./routes/users');
+const partyRouter = require('./routes/party');
 const authRouter = require('./routes/auth');
 const friendRequestRouter = require('./routes/friendRequests');
+const partyRequestRouter = require('./routes/partyRequests');
 
 app.use('/api', indexRouter);
 app.use('/api/users', usersRouter);
+app.use('/api/party', partyRouter);
 app.use('/api/auth',authRouter);
 app.use('/api/friendRequests',friendRequestRouter);
+app.use('/api/partyRequests',partyRequestRouter);
 
 module.exports = app;

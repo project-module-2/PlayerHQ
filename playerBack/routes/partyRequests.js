@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 //Importar los modelos necesarios
-const FriendRequest = require('../models/PartyRequests');
+const PartyRequests = require('../models/PartyRequests');
 const Party = require('../models/Party');
 const User = require('../models/User');
 
@@ -9,53 +9,66 @@ const User = require('../models/User');
 const {checkRole, veryToken, checkParty} = require('../utils/auth-mid');
 
 //Crear friend request
-router.patch('/createFriendRequest', veryToken, checkRole(['Admin','USER']), (req, res, next) => {
+router.patch('/createPartyRequest', veryToken, checkRole(['Admin','USER']), (req, res, next) => {
   const userId = req.user._id;
-  const myRequest = {date,message,_to} = req.body
 
-  myRequest["_from"]=`${userId}`;
+  //Armar request
+  const myRequest = {date,message,_to,_from} = req.body
+  myRequest["_owner"]=`${userId}`;
 
-  //Verificar que el usuario al que enviamos el request no sea a el mismo o a un usuario bloqueado
-  if(myRequest._to === myRequest._from){
-    res.status(200).json({msg:"No puedes enviar una solicitud de amistad a ti mismo"});
-  }
-  else if(req.user._blocked.includes(myRequest._to)){
-    res.status(200).json({msg:"No puedes enviar una solicitud de amistad a un usuario bloqueado"});
-  }
-  else if(req.user._friends.includes(myRequest._to)){
-    res.status(200).json({msg:"No puedes enviar una solicitud de amistad a un usuario que ya es tu amigo"});
-  }
-  else {
-    //Verificamos que el usuario destinatario no tenga bloqueado a el usuario que envia el request
-    User.findById(myRequest._to)
-    .then(foundUser => {
-      if(foundUser._blocked.includes(userId)) {
-        res.status(200).json({msg:"No puedes enviar una solicitud de amistad a un usuario que te ha bloqueado"});
-      }
-      else {
-        FriendRequest.find({_from:userId, _to:myRequest._to, status:"pending"})
-        .then(foundRequests => {
-          if(foundRequests.length>0) {
-            res.status(200).json({msg:"Ya existe una solicitud de amistad activa para este usuario"});
-          }
-          else {
-            FriendRequest.create(myRequest)
-            .then(request => {
-              res.status(200).json({result:request})
+  //Verificar que el request sender sea dueño de la party
+  Party.findOne({$and: [{_owner:myRequest._owner},{_id:myRequest._from}]})
+  .then(party =>{
+    if(party !== null) {
+        //Verificar que el usuario al que enviamos el request no sea a el mismo o a un usuario bloqueado
+        if(myRequest._to === myRequest._owner){
+            res.status(200).json({msg:"No puedes enviar una solicitud de party a ti mismo"});
+        }
+        else if(req.user._blocked.includes(myRequest._to)){
+            res.status(200).json({msg:"No puedes enviar una solicitud de party a un usuario bloqueado"});
+        }
+        else if(party._members.includes(myRequest._to)){
+            res.status(200).json({msg:"No puedes enviar una solicitud de party a un usuario que ya esta incluido en la party"});
+        }
+        else {
+            //Verificamos que el usuario destinatario no tenga bloqueado a el usuario que envia el request
+            User.findById(myRequest._to)
+            .then(foundUser => {
+            if(foundUser._blocked.includes(userId)) {
+                res.status(200).json({msg:"No puedes enviar una solicitud de party a un usuario que te ha bloqueado"});
+            }
+            else {
+                PartyRequests.find({_from:myRequest._from, _to:myRequest._to, status:"pending"})
+                .then(foundRequests => {
+                if(foundRequests.length>0) {
+                    res.status(200).json({msg:"Ya existe una solicitud de party activa para este usuario"});
+                }
+                else {
+                    PartyRequests.create(myRequest)
+                    .then(request => {
+                    res.status(200).json({result:request})
+                    })
+                    .catch( error => res.status(400).json({error}));
+                }
+                })
+                .catch( error => res.status(400).json({error}));
+            }
             })
             .catch( error => res.status(400).json({error}));
-          }
-        })
-        .catch( error => res.status(400).json({error}));
-      }
-    })
-    .catch( error => res.status(400).json({error}));
-  }
+        }
+
+    }
+    else {
+        res.status(200).json({msg:"No se pudo encontrar la party solicitada o el usuario no es dueño de la party"});
+    }
+  })
+  .catch( error => res.status(400).json({error}));
+
 });
 
 //Encontrar todos los requests creados por el usuario, tiene que estar logueado
-router.get('/friendRequestsFrom', veryToken, checkRole(['Admin','USER']), (req, res, next) => {
-  FriendRequest.find({_from: req.user._id, status:"pending"})
+router.get('/partyRequestsFrom', veryToken, checkRole(['Admin','USER']), (req, res, next) => {
+    PartyRequests.find({_from: req.user._id, status:"pending"})
   .then(requests => {
     res.status(200).json({result:requests})
   })
@@ -63,8 +76,8 @@ router.get('/friendRequestsFrom', veryToken, checkRole(['Admin','USER']), (req, 
 });
 
 //Encontrar todos los requests realizados hacia el usuario, tiene que estar logueado
-router.get('/friendRequestsTo', veryToken, checkRole(['Admin','USER']), (req, res, next) => {
-  FriendRequest.find({_to: req.user._id, status:"pending"})
+router.get('/partyRequestsTo', veryToken, checkRole(['Admin','USER']), (req, res, next) => {
+    PartyRequests.find({_to: req.user._id, status:"pending"})
   .then(requests => {
     res.status(200).json({result:requests})
   })
@@ -72,10 +85,10 @@ router.get('/friendRequestsTo', veryToken, checkRole(['Admin','USER']), (req, re
 });
 
 //Eliminar request, debe de ser ADMIN
-router.delete('/deleteFriendRequest/:id', veryToken, checkRole(['Admin']), (req, res, next)=> {
+router.delete('/deletePartyRequest/:id', veryToken, checkRole(['Admin']), (req, res, next)=> {
   //Sacamos el parametro id del req.params
   const{id} = req.params;
-  FriendRequest.findByIdAndDelete(id)
+  PartyRequests.findByIdAndDelete(id)
   .then(()=>{
     res.status(200).json({msg:'Solicitud de amistad borrada'});
   })
@@ -83,53 +96,40 @@ router.delete('/deleteFriendRequest/:id', veryToken, checkRole(['Admin']), (req,
 });
 
 //Aceptar Request
-router.patch('/acceptFriendRequest/:id', veryToken, checkRole(['Admin','USER']), (req, res, next) => {
-  const{id} = req.params;
-
-  FriendRequest.findById(id)
+router.patch('/acceptPartyRequest', veryToken, checkRole(['Admin','USER']), (req, res, next) => {
+  const{id} = req.body;
+  const userId = req.user._id;
+  console.log(id)
+  PartyRequests.findOne({_id:id})
   .then(request => {
-    if(request.status == "pending") {
+    if(request.status === "pending") {
       //Validaciones
-      if(req.user._friends.includes(request._to)){
-        FriendRequest.findByIdAndUpdate({_id: id} ,{status: "declined"}, {new:true})
+      if(req.user._blocked.includes(request._owner)) {
+        PartyRequests.findByIdAndUpdate({_id: id} ,{status: "declined"}, {new:true})
         .then(() => {
-          res.status(200).json({msg:"No puedes aceptar una solicitud de amistad a un usuario que ya es tu amigo"});
-        })
-        .catch( error => res.status(400).json({error}))
-      }
-      else if(req.user._blocked.includes(request._to)){
-        FriendRequest.findByIdAndUpdate({_id: id} ,{status: "declined"}, {new:true})
-        .then(() => {
-          res.status(200).json({msg:"No puedes aceptar una solicitud de amistad a un usuario bloqueado"});
+          res.status(200).json({msg:"No puedes aceptar una solicitud de una party de un usuario bloqueado"});
         })
         .catch( error => res.status(400).json({error}))
       }
       else {
-        User.findById(myRequest._to)
+        User.findById(request._owner)
         .then(foundUser => {
-          if(foundUser._blocked.includes(req.user._id)) {
-            FriendRequest.findByIdAndUpdate({_id: id} ,{status: "declined"}, {new:true})
+          if(foundUser._blocked.includes(userId)) {
+            PartyRequests.findByIdAndUpdate({_id: id} ,{status: "declined"}, {new:true})
             .then(() => {
               res.status(200).json({msg:"No puedes aceptar una solicitud de amistad a un usuario que te ha bloqueado"});
             })
             .catch( error => res.status(400).json({error}))
           }
           else {
-            //Agregar a la lista de amigos
-            User.findByIdAndUpdate({_id: request._from} ,{$push:{_friends:request._to}}, {new:true})
-            .then(() => {
-              res.status(200).json({msg:`Amigo añadido al usuario que creo la solicitud de amistad exitosamente!`});
-            })
-            .catch( error => res.status(400).json({error}))
-            User.findByIdAndUpdate({_id: request._to}, {$push:{_friends:request._from}}, {new:true})
-            .then(() => {
-              res.status(200).json({msg:`Amigo añadido al usuario destinatario de la solicitud de amistad exitosamente!`});
-            })
-            .catch( error => res.status(400).json({error}))
-
-            FriendRequest.findByIdAndUpdate({_id: id} ,{status: "accepted"}, {new:true})
-            .then(() => {
-              res.status(200).json({msg:`Invitacion de amistad aceptada exitosamente!`});
+            //Agregar user a la party
+            let responseMsg = "";
+            Promise.all([
+              Party.findByIdAndUpdate({_id: request._from} ,{$push:{_members:userId}}, {new:true}),
+              PartyRequests.findByIdAndUpdate({_id: id} ,{status: "accepted"}, {new:true})
+            ])
+            .then(()=>{
+              res.status(200).json({msg:"Usuario añadido a la party exitosamente!"});
             })
             .catch( error => res.status(400).json({error}))
           }
@@ -145,12 +145,19 @@ router.patch('/acceptFriendRequest/:id', veryToken, checkRole(['Admin','USER']),
 });
 
 //Rechazar Request
-router.patch('/rejectFriendRequest /:id', veryToken, checkRole(['Admin','USER']), (req, res, next) => {
-  FriendRequest.findByIdAndUpdate({_id: id} ,{status: "declined"}, {new:true})
-  .then(() => {
-    res.status(200).json({msg:`Invitacion de amistad aceptada exitosamente!`});
+router.patch('/rejectPartyRequest', veryToken, checkRole(['Admin','USER']), (req, res, next) => {
+    const{id} = req.body;
+
+  PartyRequests.findOneAndUpdate({$and: [{_id: id},{_to: req.user._id}]} ,{status: "declined"}, {new:true})
+  .then((party) => {
+    if(party===null) {
+      res.status(200).json({msg:"no se encontro la solicitud de party"});
+    }
+    else {
+      res.status(200).json({msg:`Invitacion de party rechazada exitosamente!`});
+    }
   })
-  .catch( error => res.status(400).json({error}))
+  .catch( error => res.status(400).json({error}));
 });
 
 module.exports = router;

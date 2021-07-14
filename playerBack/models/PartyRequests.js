@@ -8,7 +8,7 @@ const partyRequestsSchema = new Schema({
     },
     message: {
         type:String,
-        required:[true,"Debes agregar un mensaje"],
+        default:"Unete a mi party!",
         max:50
     },
     status:{
@@ -20,6 +20,11 @@ const partyRequestsSchema = new Schema({
         type:Schema.Types.ObjectId,
         ref:"Party",
         require:[true,"Debes agregar el id de la party, la cual pertenece la invitacion"]
+    },
+    _owner: {
+        type:Schema.Types.ObjectId,
+        ref:"User",
+        require:[true,"Debes agregar el id del dueño de la party"]
     },
     _to:{
         type:Schema.Types.ObjectId,

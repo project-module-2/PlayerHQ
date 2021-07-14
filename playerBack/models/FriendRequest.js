@@ -8,7 +8,7 @@ const friendRequestSchema = new Schema({
     },
     message: {
         type:String,
-        required:[true,"Debes agregar un mensaje"],
+        default:"Agregame como amigo!",
         max:50
     },
     status:{
