@@ -38,7 +38,7 @@ exports.checkRole = (roles) => {
             return next()
         }
         else {
-            return res.status(403),json({msg:'No tienes permiso para realizar esta accion',error})
+            return res.status(403).json({msg:'No tienes permiso para realizar esta accion'})
         }
     }
 }

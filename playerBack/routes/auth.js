@@ -11,10 +11,10 @@ const {clearRes, createJWT} = require('../utils/auth-mid');
 //en este archivo se tendran 3 rutas, LOGIN, SIGNUP, LOGOUT
 
 router.post('/signup', function(req, res, next) {
-    const {email, username, password, confirmPassword} = req.body;
+    const {email, username, password, confirmPassword, role} = req.body;
 
     if(password != confirmPassword) {
-        return res.status(403).json({msg:"Las contraseñas no coinciden"});
+        return res.status(400).json({msg:"Las contraseñas no coinciden"});
     }
 
     //ahora encriptamos el password
@@ -23,7 +23,8 @@ router.post('/signup', function(req, res, next) {
         const user = {
             email,
             password:hashedPass,
-            username
+            username,
+            role
         }
         User.create(user)
         .then(userCreated=>{
@@ -36,7 +37,7 @@ router.post('/signup', function(req, res, next) {
                 httpOnly:true //las cookies solo son accesibles por webserver
             }).status(200).json({result:newUser});
         })
-        .catch()
+        .catch(error=>res.status(400).json({error}));
     })
     .catch(error=>res.status(400).json({error}));
 });
@@ -64,7 +65,7 @@ router.post('/login',(req,res)=>{
                 }).status(200).json({result:newUser});
             }
             else {
-                return res.status(404).json({msg:'El correo o contraseña son erroneos'});
+                return res.status(403).json({msg:'El correo o contraseña son erroneos'});
             }
         })
     })

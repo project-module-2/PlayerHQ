@@ -18,8 +18,7 @@ const userSchema = new Schema({
     },
     platforms:[{
         type:String,
-        enum:["Xbox","Playstation","Nintendo","PC","Mobile"],
-        required:[true,"Debes agregar por lo menos una plataforma"]
+        enum:["Xbox","Playstation","Nintendo","PC","Mobile"]
     }],
     intereses:[{
         type:String,
@@ -30,10 +29,10 @@ const userSchema = new Schema({
         type:String,
         enum:["Mexico","Estados Unidos","Canada"]
     },
-    language:{
+    language:[{
         type:String,
         enum:["Español","Ingles","Frances","Otro"]
-    },
+    }],
     mainLanguage: {
         type:String
     },
@@ -65,10 +64,6 @@ const userSchema = new Schema({
     _blocked:[{
         type:Schema.Types.ObjectId,
         ref:"User"
-    }],
-    _partiesJoined:[{
-        type:Schema.Types.ObjectId,
-        ref:"Party"
     }],
     role:{
         type:String,

@@ -1,14 +1,14 @@
 const mongoose = require("mongoose");
 const {Schema, model} = mongoose;
 
-const friendRequestSchema = new Schema({
+const partyRequestsSchema = new Schema({
     date:{
         type:String,
         required:[true,"Debes agregar una fecha"]
     },
     message: {
         type:String,
-        default:"Agregame como amigo!",
+        default:"Unete a mi party!",
         max:50
     },
     status:{
@@ -18,8 +18,13 @@ const friendRequestSchema = new Schema({
     },
     _from: {
         type:Schema.Types.ObjectId,
+        ref:"Party",
+        require:[true,"Debes agregar el id de la party, la cual pertenece la invitacion"]
+    },
+    _owner: {
+        type:Schema.Types.ObjectId,
         ref:"User",
-        require:[true,"Debes agregar el usuario que solicita la invitacion"]
+        require:[true,"Debes agregar el id del dueño de la party"]
     },
     _to:{
         type:Schema.Types.ObjectId,
@@ -28,4 +33,4 @@ const friendRequestSchema = new Schema({
     }
 },{timestapms:true})
 
-module.exports = model("FriendRequest",friendRequestSchema);
+module.exports = model("PartyRequest",partyRequestsSchema);
