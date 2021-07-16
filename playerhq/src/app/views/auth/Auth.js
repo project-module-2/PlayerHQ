@@ -3,7 +3,7 @@ import './styles.css'
 import logo from '../../assets/images/logo_color.png'
 import {Link} from 'react-router-dom';
 import {loginEndpoint,signupEndpoint} from '../../services/auth-ws'
-import {TextInput, Button} from "../../components"
+import {TextInput, Button} from "../../components/Index"
 
 export default class Auth  extends Component{
 
