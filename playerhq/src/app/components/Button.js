@@ -4,12 +4,12 @@ const Button = ({
     onPress=()=>{},
     disabled
     })=>(
-    <button 
-       disabled={disabled}
+    <button
+        disabled={disabled}
         className={`btn btn-${type}`}
         onClick={onPress}
     >
-        {text}
+    {text}
     </button>
 )
 
