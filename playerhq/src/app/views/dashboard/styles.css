@@ -1,0 +1,195 @@
+@import url('https://fonts.googleapis.com/css2?family=Raleway&display=swap');
+.bodyDiv {
+    margin: 0;
+    padding: 0;
+    background-color: #0B0A0A;
+    font-family: 'Raleway', sans-serif;
+    width: 100vw;
+    min-height: 100vh;
+}
+
+.logo{
+    float:left;
+    width:70%;
+    margin-left: 15%;
+    margin-top: 10%;
+}
+
+.dashboardContent{
+    height: 96vh;
+	display: flex;
+	justify-content: space-between;
+	align-items: stretch;
+}
+
+.dashboardLeft {
+    padding-top: 2%;
+    width: 15%;
+    margin-left: 1%;
+    display: flex;
+	flex-direction: column;
+}
+
+.popularUsers {
+    margin-top: 50px;
+    font-size: 1.7em;
+    border: 3px solid #6000FC;
+    border-collapse: separate;
+    border-radius: 7px;
+}
+
+.list-group-item {
+    border-top: 10px solid #6000FC;
+    border-radius: 10px;
+    color: #00F0FF
+}
+
+.leftSide span {
+    font-size: 2.5em;
+    color: white;
+}
+
+.dashboardRight {
+    width: 81%;
+    margin-right: 1%;
+}
+
+.dashboardRight .head {
+    width: 100%;
+    display: flex;
+	flex-direction: row;
+	flex-wrap: nowrap;
+	justify-content: space-between;
+	align-items: stretch;
+	align-content: stretch;
+}
+
+.dashboardRight .head div{
+    font-size: 1.5em;
+    margin-right: 2%;
+    margin-top: 0.5%;
+    display: flex;
+	flex-direction: row;
+	flex-wrap: nowrap;
+	justify-content: space-between;
+	align-items: center;
+	align-content: center;
+}
+
+.dashboardRight .head div a{
+    margin-right: 50px;
+}
+
+.dashboardRight .head span{
+    margin-left: 5%;
+    margin-top: 0.5%;
+    color: #00F0FF;
+    font-size: 2em;
+}
+
+.profileIcon {
+    width: 6%;
+    margin-right: 2%;
+    margin-bottom: 1.5%;
+}
+
+.buscador {
+    display: flex;
+	flex-direction: column;
+	flex-wrap: nowrap;
+	justify-content: space-between;
+	align-items: stretch;
+	align-content: stretch;
+    
+    border-top: 3px solid #6000FC;
+    border-bottom: 3px solid #6000FC;
+    border-collapse: separate;
+    border-spacing: 15px;
+
+    margin-top: 0.5%;
+    margin-bottom: 1%;
+    margin-left: 2%;
+    margin-right: 2%;
+    width: 95%;
+}
+
+.buscadorTop {
+    margin: 1%;
+}
+
+.buscadorBot {
+    margin: 1%;
+    display: flex;
+    justify-content: space-between;
+	align-content: space-between;
+}
+
+label {
+   margin-right: 10px;
+   margin-bottom: 0 !important;
+}
+
+.userField {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+.tablaUsuarios {
+    
+}
+
+/*.rightSide{
+    display: flex;
+	flex-direction: column;
+	justify-content: space-around;
+	align-items: center;
+	align-content: center;
+}
+
+.table-striped>tr:nth-child(odd){
+   background-color:red;
+}
+
+.rightSide img {
+    width: 70%;
+}
+
+.elipseDown{
+    position: absolute;
+    right: 0px;
+    bottom: 0px;
+    width:12%;
+}
+
+.accountControls{
+    padding: 20px;
+    width: 35%;
+    margin-top: 100px;
+    border: 3px solid #6000FC;
+    border-collapse: separate;
+    border-spacing: 15px;
+    display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+	align-items: center;
+	align-content: center;
+}
+
+.accountControls span {
+    font-size: 2em;
+    color: white;
+}
+.accountControls span img{
+    width: 15%;
+    margin-right: 10px;
+
+}
+
+.accountControls Button{
+    border-radius: 0 !important;
+    margin-top: 25px;
+    background-color: #6000FC;
+    font-size: 2em;
+    width: 220px;
+}*/
