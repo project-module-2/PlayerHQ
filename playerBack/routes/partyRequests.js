@@ -8,8 +8,8 @@ const User = require('../models/User');
 //Importamos los utils
 const {checkRole, veryToken, checkParty} = require('../utils/auth-mid');
 
-//Crear friend request
-router.patch('/createPartyRequest', veryToken, checkRole(['Admin','USER']), (req, res, next) => {
+//Crear party request como owner
+router.patch('/createPartyRequestAsOwner', veryToken, checkRole(['Admin','USER']), (req, res, next) => {
   const userId = req.user._id;
 
   //Armar request

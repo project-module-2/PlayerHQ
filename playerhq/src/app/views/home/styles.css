@@ -1,0 +1,84 @@
+@import url('https://fonts.googleapis.com/css2?family=Raleway&display=swap');
+.bodyDiv {
+    margin: 0;
+    padding: 0;
+    background-color: #0B0A0A;
+    font-family: 'Raleway', sans-serif;
+    width: 100vw;
+    min-height: 100vh;
+}
+
+.elipseUp{
+    float:left;
+    width:12%;
+}
+
+.homeContent{
+    padding-top: 2%;
+	display: flex;
+	justify-content: space-around;
+	align-items: stretch;
+}
+
+.leftSide {
+    width: 30%;
+    display: flex;
+	flex-direction: column;
+}
+
+.leftSide span {
+    font-size: 2.5em;
+    color: white;
+}
+
+.rightSide{
+    display: flex;
+	flex-direction: column;
+	justify-content: space-around;
+	align-items: center;
+	align-content: center;
+}
+
+.rightSide img {
+    width: 70%;
+}
+
+.elipseDown{
+    position: absolute;
+    right: 0px;
+    bottom: 0px;
+    width:12%;
+}
+
+.accountControls{
+    padding: 20px;
+    width: 35%;
+    margin-top: 100px;
+    border: 3px solid #6000FC;
+    border-collapse: separate;
+    border-spacing: 15px;
+    display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+	align-items: center;
+	align-content: center;
+}
+
+.accountControls span {
+    font-size: 2em;
+    color: white;
+}
+.accountControls span img{
+    width: 15%;
+    margin-right: 10px;
+
+}
+
+.accountControls Button{
+    border-radius: 0 !important;
+    margin-top: 25px;
+    background-color: #6000FC;
+    font-size: 2em;
+    width: 220px;
+}
+
