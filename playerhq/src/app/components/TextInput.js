@@ -10,14 +10,14 @@ const TextInput = ({
 }) => (
     <div className="mb-3">
         {/* con este validamos para mosstrar el label */}
-    {textLabel && <label 
-        for="exampleFormControlInput1" 
+    {textLabel && <label
+        for="exampleFormControlInput1"
         class="form-label">
             {textLabel}
     </label>}
-    <input 
+    <input
         type={type}
-        className="form-control" 
+        className="form-control"
         id={name}
         placeholder={placeholder}
         name={name}

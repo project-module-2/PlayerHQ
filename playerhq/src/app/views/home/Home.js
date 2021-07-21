@@ -8,7 +8,7 @@ import profile from '../../assets/icons/profile.png';
 import Button from '../../components/Button';
 import './styles.css'
 
-const Home = () => (
+const Home = ({history}) => (
 <div class="bodyDiv">
     <img class="elipseUp" src={elipse2} alt="Elipse"></img>
     <div class="homeContent">
@@ -25,11 +25,11 @@ const Home = () => (
                 </div>
                 <Button
                     text="Login"
-                    onPress={console.log("LOGIN")}
+                    onPress={()=>history.push('/login')}
                 />
                 <Button
                     text="Signup"
-                    onPress={console.log("SIGNUP")}
+                    onPress={()=>history.push('/signup')}
                 />
             </div>
         </div>
