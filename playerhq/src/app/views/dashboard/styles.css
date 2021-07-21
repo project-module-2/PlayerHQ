@@ -2,10 +2,9 @@
 .bodyDiv {
     margin: 0;
     padding: 0;
-    background-color: #0B0A0A;
+    background: linear-gradient(135deg, #070a0d, #121921, #0f0613);
+    background-size: cover;
     font-family: 'Raleway', sans-serif;
-    width: 100vw;
-    min-height: 100vh;
 }
 
 .logo{
@@ -31,6 +30,7 @@
 }
 
 .popularUsers {
+    background-color: rgba(200, 200, 200, 0.05) !important;
     margin-top: 50px;
     font-size: 1.7em;
     border: 3px solid #6000FC;
@@ -39,10 +39,10 @@
 }
 
 .list-group-item {
-    border-top: 10px solid #6000FC;
-    border-radius: 10px;
-    color: #00F0FF
+    color: #00F0FF;
 }
+
+
 
 .leftSide span {
     font-size: 2.5em;
@@ -82,7 +82,7 @@
 
 .dashboardRight .head span{
     margin-left: 5%;
-    margin-top: 0.5%;
+    margin-top: 1%;
     color: #00F0FF;
     font-size: 2em;
 }
@@ -100,7 +100,7 @@
 	justify-content: space-between;
 	align-items: stretch;
 	align-content: stretch;
-    
+
     border-top: 3px solid #6000FC;
     border-bottom: 3px solid #6000FC;
     border-collapse: separate;
@@ -113,15 +113,32 @@
     width: 95%;
 }
 
+.buscador > span:first-of-type {
+    margin-top: 5px;
+    color: white;
+    font-size: 1.4em;
+}
+
 .buscadorTop {
-    margin: 1%;
+    margin-top: 1%;
+    margin-bottom: 1%;
+    margin-left: 4%;
+    margin-right: 3%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.buscadorTop Button {
+    width: 10% !important;
+    font-size: 1.4em;
 }
 
 .buscadorBot {
     margin: 1%;
     display: flex;
-    justify-content: space-between;
-	align-content: space-between;
+    justify-content: space-around;
+    align-items: center;
 }
 
 label {
@@ -129,67 +146,66 @@ label {
    margin-bottom: 0 !important;
 }
 
-.userField {
+.userField, .gameField{
     display: flex;
     flex-direction: row;
     align-items: center;
-}
-
-.tablaUsuarios {
-    
-}
-
-/*.rightSide{
-    display: flex;
-	flex-direction: column;
-	justify-content: space-around;
-	align-items: center;
-	align-content: center;
-}
-
-.table-striped>tr:nth-child(odd){
-   background-color:red;
-}
-
-.rightSide img {
+    color: white;
+    font-size: 1.3em;
     width: 70%;
 }
 
-.elipseDown{
-    position: absolute;
-    right: 0px;
-    bottom: 0px;
-    width:12%;
+.form-select {
+    height: 40px;
+    width: 60%;
+    border: 1px solid #6000FC !important;
+    box-shadow: 0 0 2px #6000FC !important;
+    background-color: rgba(200, 200, 200, 0.1) !important;
+    color: white !important;
 }
 
-.accountControls{
-    padding: 20px;
-    width: 35%;
-    margin-top: 100px;
-    border: 3px solid #6000FC;
-    border-collapse: separate;
-    border-spacing: 15px;
-    display: flex;
-	flex-direction: column;
-	justify-content: space-between;
-	align-items: center;
-	align-content: center;
+.form-select:focus {
+    border: 1px solid #00F0FF !important;
+
 }
 
-.accountControls span {
-    font-size: 2em;
+.gameField {
+    width: 30%;
+}
+
+.gameField label{
+    width: 200px;
+}
+
+.platformField, .styleField, .languageField {
     color: white;
-}
-.accountControls span img{
-    width: 15%;
-    margin-right: 10px;
-
+    font-size: 1.3em;
+    width: 30%;
 }
 
-.accountControls Button{
-    border-radius: 0 !important;
-    margin-top: 25px;
-    background-color: #6000FC;
-    font-size: 2em;
-    width: 220px;
-}*/
+.form-control-plaintext {
+    outline: none !important;
+    border: 1px solid #6000FC !important;
+    box-shadow: 0 0 2px #6000FC !important;
+    color: white !important;
+    background-color: rgba(200, 200, 200, 0.1) !important;
+    font-size: 1em !important;
+}
+
+.form-control-plaintext:focus {
+    border: 1px solid #00F0FF !important;
+}
+
+.tablaUsuarios {
+    border: 1px solid white;
+    background-color: rgba(200, 200, 200, 0.1);
+    overflow:auto;
+    height: 70vh;
+    width: 95%;
+    margin-left: 2%;
+}
+
+tr:hover {
+    background-color: rgba(0, 240, 255, 0.075) !important;
+    font-weight: 600;
+}

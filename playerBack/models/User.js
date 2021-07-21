@@ -38,6 +38,9 @@ const userSchema = new Schema({
         type:String,
         enum:["Español","Ingles","Frances","Otro"]
     }],
+    favoriteGame: {
+        type:String
+    },
     mainLanguage: {
         type:String
     },
