@@ -12,6 +12,11 @@ const userSchema = new Schema({
         unique:[true,"el email ya existe"],
         required:[true,"Debes agregar un correo"]
     },
+    avatar:{
+        type:Number,
+        defalt:(Math.floor(Math.random() * 5) + 1),
+        enum:[1,2,3,4,5]
+    },
     password:{
         type:String,
         required:[true,"Debes agregar una contraseña"]
@@ -22,7 +27,7 @@ const userSchema = new Schema({
     }],
     intereses:[{
         type:String,
-        required:[true,"Debes indicar por lo menos un interes"],
+        default:"Casual",
         enum:["Casual","Competitivo","eSport"]
     }],
     country:{
@@ -33,6 +38,9 @@ const userSchema = new Schema({
         type:String,
         enum:["Español","Ingles","Frances","Otro"]
     }],
+    favoriteGame: {
+        type:String
+    },
     mainLanguage: {
         type:String
     },

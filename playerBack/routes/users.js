@@ -29,6 +29,68 @@ router.get('/', veryToken,checkRole(['Admin','USER']), (req, res, next) => {
   .catch( error => res.status(400).json({error}))
 });
 
+//Conseguir los 10 usuarios mas populares
+router.get('/popularUsers', veryToken,checkRole(['Admin','USER']), (req, res, next) => {
+  //Excluir su propio ID y los IDs de los usuarios que ha bloqueado
+  const excludedIds = [req.user._id, ...req.user._blocked];
+  const userId = req.user._id;
+  console.log(userId);
+  //Encontrar users que no tengan role de ADMIN y que no sean parte de los IDs excluidos
+  User.find({
+    $nor:[{role:'ADMIN'}],
+    $and:[{_id: {$nin:excludedIds}},{_blocked: {$nin:[req.user._id]}}]
+  })
+  User.aggregate([
+    {
+      $addFields: {
+        subscribedGroupsLength: {
+          $size: "$_friends"
+        }
+      }
+    },
+    {
+      $sort: {
+        subscribedGroupsLength: -1
+      }
+    }
+  ])
+  .limit(10)
+  .then(users => {
+    let userArr = users;
+    userArr = userArr.filter(user => !user._blocked.includes(userId));
+
+    res.status(200).json({result:userArr});
+  })
+  .catch( error => res.status(400).json({error}))
+});
+
+//Find users by their name, platform, style and favorite game
+router.get('/findUsers', veryToken,checkRole(['Admin','USER']), (req, res, next) => {
+  //Excluir su propio ID y los IDs de los usuarios que ha bloqueado
+  const {user,platform,style,favoriteGame,mainLanguage} = req.body;
+  const excludedIds = [req.user._id, ...req.user._blocked];
+  const userId = req.user._id;
+  console.log(user);
+  //Encontrar users que no tengan role de ADMIN y que no sean parte de los IDs excluidos
+  User.find({
+    $nor:[{role:'ADMIN'}],
+    $and:[{_id: {$nin:excludedIds}},{_blocked: {$nin:[req.user._id]}}],
+    platforms: {$in:platform},
+    intereses: {$in:style},
+    mainLanguage: {$regex:`.*${mainLanguage}.*`},
+    favoriteGame: {$regex:`.*${favoriteGame}.*`},
+    username: {$regex:`.*${user}.*`}
+  })
+  .limit(100)
+  .then(users => {
+    let userArr = users;
+    userArr = userArr.filter(user => !user._blocked.includes(userId));
+
+    res.status(200).json({result:userArr});
+  })
+  .catch( error => res.status(400).json({error}))
+});
+
 //Actualizar mi perfil
 router.patch('/editMyUser', veryToken, checkRole(['Admin','USER']), (req, res, next)=> {
   const{_id} = req.user;
