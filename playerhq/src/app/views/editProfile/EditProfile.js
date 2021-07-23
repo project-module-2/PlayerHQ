@@ -2,6 +2,10 @@ import React from "react"
 import './styles.css'
 import testbanner  from "../../assets/images/1.jpg"
 import testavatar from "../../assets/images/1ccf5087-4b44-4d0a-b8e3-84da3ec3afd4.png"
+import logo from '../../assets/images/logo_color.png';
+import Button from '../../components/Button';
+
+
 
 
 // X cambiar el componente a clase
@@ -18,7 +22,16 @@ class EditProfile extends React.Component {
     state = {
         tagname: "",
         date: "",
-        platform: ""
+        platform: "",
+        intereses:"",
+        country:"",
+        discord:"",
+        twitch:"",
+        skype:"",
+        xboxGamertag:"",
+        steamUsername:"",
+        playstationUsername:"",
+        nintendoUsername:""
     }
 
     // state["tagname"] = "algo"
@@ -39,9 +52,9 @@ class EditProfile extends React.Component {
                     {}
             
                     <div className = "dataContainer">
-                        <div className= "parties">LAS PARTIES</div>
                         <div className= "info">
                            <form>
+
                            <label for="tagname"> Tagname:
                                 <input 
                                 type="text" 
@@ -49,13 +62,15 @@ class EditProfile extends React.Component {
                                 value={this.state.tagname}
                                 onChange={this.handleChange}/>
                             </label>
+
                            <label for="birthday"> Fecha de nacimiento:
                                 <input 
                                 type="date" 
                                 id="date" 
                                 onChange={this.handleChange}/>
                             </label>
-                            <label for="platform"> Plataforma favorita
+
+                            <label for="platform"> Plataforma favorita:
                                 <select 
                                     id="platform"
                                     onChange={this.handleChange}
@@ -67,7 +82,8 @@ class EditProfile extends React.Component {
                                     <option value="Mobile">Mobile</option>
                                 </select>
                             </label>
-                            <label for="intereses"> Estilo de Juego
+
+                            <label for="intereses"> Estilo de Juego:
                                 <select 
                                     id="intereses"
                                     onChange={this.handleChange}
@@ -77,7 +93,8 @@ class EditProfile extends React.Component {
                                     <option value="eSport">eSport</option>
                                 </select>
                             </label>
-                            <label for="country"> País
+
+                            <label for="country"> País:
                                 <select 
                                     id="country"
                                     onChange={this.handleChange}
@@ -87,59 +104,68 @@ class EditProfile extends React.Component {
                                     <option value="Canada">Canadá</option>
                                 </select>
                             </label>
-                            <label for="discord"> Usuario de discord:
+
+                            <label for="discord"> Usuario de Discord:
                                 <input 
                                 type="text" 
                                 id="discord" 
                                 value={this.state.discord}
                                 onChange={this.handleChange}/>
                             </label>
-                            <label for="twitch"> Usuario de twitch
+
+                            <label for="twitch"> Usuario de Twitch:
                                 <input 
                                 type="text" 
                                 id="twitch" 
                                 value={this.state.twitch}
                                 onChange={this.handleChange}/>
                             </label>
-                            <label for="skype"> Usuario de skype:
+
+                            <label for="skype"> Usuario de Skype:
                                 <input 
                                 type="text" 
                                 id="skype" 
                                 value={this.state.skype}
                                 onChange={this.handleChange}/>
                             </label>
-                            <label for="xboxGamertag"> Usuario de xboxGamertag:
+
+                            <label for="xboxGamertag">xboxGamertag:
                                 <input 
                                 type="text" 
                                 id="xboxGamertag" 
                                 value={this.state.xboxGamertag}
                                 onChange={this.handleChange}/>
                             </label>
-                            <label for="steamUsername"> Usuario de steamUsername:
+
+                            <label for="steamUsername"> Usuario de Steam:
                                 <input 
                                 type="text" 
                                 id="steamUsername" 
                                 value={this.state.steamUsername}
                                 onChange={this.handleChange}/>
                             </label>
-                            <label for="playstationUsername"> Usuario de playstationUsername:
+
+                            <label for="playstationUsername"> Usuario de Playstation:
                                 <input 
                                 type="text" 
                                 id="playstationUsername" 
                                 value={this.state.playstationUsername}
                                 onChange={this.handleChange}/>
                             </label>
-                            <label for="nintendoUsername"> Usuario de nintendoUsername:
+
+                            <label for="nintendoUsername"> Usuario de Nintendo:
                                 <input 
                                 type="text" 
                                 id="nintendoUsername" 
                                 value={this.state.nintendoUsername}
                                 onChange={this.handleChange}/>
                             </label>
-                            
                            </form>
                          </div>
-                        <div className= "friends">LOS AMIGOS</div>
+                         <Button
+                                        text="Guardar"
+                                        onPress={console.log("BUSCAR")}
+                                    />
             
                 </div>
             </div>
