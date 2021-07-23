@@ -3,8 +3,8 @@ const {Schema, model} = mongoose;
 
 const friendRequestSchema = new Schema({
     date:{
-        type:String,
-        required:[true,"Debes agregar una fecha"]
+        type: Date,
+        default: Date.now
     },
     message: {
         type:String,

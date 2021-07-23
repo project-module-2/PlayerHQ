@@ -32,15 +32,12 @@ export default class Auth  extends Component{
          const perroPromise = () => match.path === "/signup" ? signupEndpoint(user) : loginEndpoint(user);
          perroPromise()
              .then(res=>{
-               
                  localStorage.setItem( "user",JSON.stringify(res.data.result) ) 
                  history.push('/main')
              })
              .catch(error =>{
                  console.log("error",error)
              })
-         
-         
      }
      render(){
          //desctruramos los para tenerlo mass limpio
@@ -55,8 +52,6 @@ export default class Auth  extends Component{
                  <div className="card">
                      <form onSubmit={handleSubmit}>
                          <img src={logo} width='20%'/>
- 
- 
                          {match.path === "/signup" &&
                                  <TextInput
                                  name='name'
@@ -64,7 +59,6 @@ export default class Auth  extends Component{
                                  placeholder='John Snow'
                                  handleChange={handleChange}
                              />
-                         
                          }
                          <TextInput
                              name='email'
@@ -72,7 +66,6 @@ export default class Auth  extends Component{
                              placeholder='j.snow@arena.com'
                              handleChange={handleChange}
                          />
-                         
                          <TextInput
                              name='password'
                              textLabel= 'Contraseña'
@@ -87,19 +80,15 @@ export default class Auth  extends Component{
                                  placeholder='······'
                                  handleChange={handleChange}
                              />
-                         
                          }
-
                          <Button
                              text='Entrar'
                          />
-                         
                      </form>
                      <span> {`${
-                         match.path !== '/signup' ? "Aun no" : 'Ya' 
-                         
-                     } tienes cuenta? |`} 
-                         <Link to={match.path !== "/signup" ? "/signup" :"/login" }>Dale aqui</Link> 
+                         match.path !== '/signup' ? "Aun no" : 'Ya'
+                     } tienes cuenta? |`}
+                         <Link to={match.path !== "/signup" ? "/signup" :"/login" }>Dale aqui</Link>
                      </span>
                      
                  </div>

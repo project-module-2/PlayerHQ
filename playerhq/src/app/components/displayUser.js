@@ -8,8 +8,6 @@ const displayUser = ({
         {   "display": "flex",
             "flex-direction": "row",
             "flex-wrap": "nowrap",
-            "justify-content": "center",
-            "align-items": "center",
             "align-content": "space-between"
         }
     }>

@@ -152,7 +152,7 @@ label {
     align-items: center;
     color: white;
     font-size: 1.3em;
-    width: 70%;
+    width: 75%;
 }
 
 .form-select {
@@ -177,7 +177,7 @@ label {
     width: 200px;
 }
 
-.platformField, .styleField, .languageField {
+.platformField, .styleField {
     color: white;
     font-size: 1.3em;
     width: 30%;
