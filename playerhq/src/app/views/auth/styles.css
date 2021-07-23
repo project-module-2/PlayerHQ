@@ -1,8 +1,25 @@
 .auth-container{
     background-color: #181a22 ;
-    height: 100vh;
-    width: 100vw;
+    height:fit-content;
+    width:fit-content;
     display: flex;
     justify-content: center;
     align-items: center;
+}
+
+.card{
+    padding:20px;
+}
+
+.signform{
+    border-top: 3px solid #6000FC;
+    border-bottom: 3px solid #6000FC;
+    border-collapse: separate;
+    border-spacing: 15px;
+
+    margin-top: 0.5%;
+    margin-bottom: 1%;
+    margin-left: 2%;
+    margin-right: 2%;
+    width: 95%;
 }

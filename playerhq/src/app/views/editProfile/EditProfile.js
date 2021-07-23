@@ -52,6 +52,8 @@ class EditProfile extends React.Component {
                     {}
             
                     <div className = "dataContainer">
+                    <img src={logo} width='20%'/>
+
                         <div className= "info">
                            <form>
 

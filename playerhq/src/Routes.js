@@ -13,9 +13,6 @@ const Routes = () =>  (
         <Route exact path="/editprofile" component={EditProfile} />
         <Route exact path="/dashboard" component={Dashboard} />
         <Route exact path="/user/:id" component={User} />
-        <Route exact path="/user/edit" component={()=><h1>Bienvenido al perfil de usuario</h1>} />
-        <Route exact path="/party/:id" component={()=><h1>Bienvenido a una party</h1>} />
-        <Route exact path="/party/edit" component={()=><h1>Bienvenido a una party</h1>} />
     </Switch>
 )
 

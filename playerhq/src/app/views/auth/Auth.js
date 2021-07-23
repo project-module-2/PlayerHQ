@@ -50,7 +50,7 @@ export default class Auth  extends Component{
          return(
              <section className="auth-container">
                  <div className="card">
-                     <form onSubmit={handleSubmit}>
+                     <form  onSubmit={handleSubmit}>
                          <img src={logo} width='20%'/>
                          {match.path === "/signup" &&
                                  <TextInput
@@ -60,7 +60,7 @@ export default class Auth  extends Component{
                                  handleChange={handleChange}
                              />
                          }
-                         <TextInput
+                         <TextInput className= "signform"
                              name='email'
                              textLabel= 'Correo electronico'
                              placeholder='j.snow@arena.com'
@@ -81,9 +81,11 @@ export default class Auth  extends Component{
                                  handleChange={handleChange}
                              />
                          }
+                         <Link to="/dashboard">
                          <Button
                              text='Entrar'
                          />
+                         </Link>
                      </form>
                      <span> {`${
                          match.path !== '/signup' ? "Aun no" : 'Ya'
