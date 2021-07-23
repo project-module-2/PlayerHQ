@@ -1,12 +1,12 @@
 import React, {Component} from 'react';
 import './styles.css'
 import logo from '../../assets/images/logo_color.png'
+import sider from "../../assets/images/login_side.png"
 import {Link} from 'react-router-dom';
 import {loginEndpoint,signupEndpoint} from '../../services/auth-ws'
 import {TextInput, Button} from "../../components/Index"
 
 export default class Auth  extends Component{
-
     state={
         user:{
             //email:''
@@ -56,14 +56,14 @@ export default class Auth  extends Component{
                                  <TextInput
                                  name='name'
                                  textLabel= 'Nombre'
-                                 placeholder='Juan Perez'
+                                 placeholder='John Snow'
                                  handleChange={handleChange}
                              />
                          }
                          <TextInput
                              name='email'
                              textLabel= 'Correo electronico'
-                             placeholder='perro@perro.com'
+                             placeholder='j.snow@arena.com'
                              handleChange={handleChange}
                          />
                          <TextInput
@@ -90,8 +90,12 @@ export default class Auth  extends Component{
                      } tienes cuenta? |`}
                          <Link to={match.path !== "/signup" ? "/signup" :"/login" }>Dale aqui</Link>
                      </span>
+                     
                  </div>
+                 <img src={sider} width='36%'/>
+
              </section>
+             
          )
      }
 
