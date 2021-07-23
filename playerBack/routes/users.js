@@ -58,27 +58,27 @@ router.get('/popularUsers', veryToken,checkRole(['Admin','USER']), (req, res, ne
   .then(users => {
     let userArr = users;
     userArr = userArr.filter(user => !user._blocked.includes(userId));
-
+    console.log("USERARR",userArr);
     res.status(200).json({result:userArr});
   })
   .catch( error => res.status(400).json({error}))
 });
 
 //Find users by their name, platform, style and favorite game
-router.get('/findUsers', veryToken,checkRole(['Admin','USER']), (req, res, next) => {
+router.post('/findUsers', veryToken,checkRole(['Admin','USER']), (req, res, next) => {
   //Excluir su propio ID y los IDs de los usuarios que ha bloqueado
-  const {user,platform,style,favoriteGame,mainLanguage} = req.body;
+  const {user,platform,style,favoriteGame} = req.body;
   const excludedIds = [req.user._id, ...req.user._blocked];
   const userId = req.user._id;
+  console.log(req.body);
   console.log(user);
   //Encontrar users que no tengan role de ADMIN y que no sean parte de los IDs excluidos
   User.find({
     $nor:[{role:'ADMIN'}],
     $and:[{_id: {$nin:excludedIds}},{_blocked: {$nin:[req.user._id]}}],
-    platforms: {$in:platform},
-    intereses: {$in:style},
-    mainLanguage: {$regex:`.*${mainLanguage}.*`},
-    favoriteGame: {$regex:`.*${favoriteGame}.*`},
+    //platforms: {$elemMatch:{$regex:`.*${platform}.*`}},
+    //intereses: {$elemMatch:{$regex:`.*${style}.*`}},
+    //favoriteGame: {$regex:`.*${favoriteGame}.*`},
     username: {$regex:`.*${user}.*`}
   })
   .limit(100)
@@ -87,6 +87,19 @@ router.get('/findUsers', veryToken,checkRole(['Admin','USER']), (req, res, next)
     userArr = userArr.filter(user => !user._blocked.includes(userId));
 
     res.status(200).json({result:userArr});
+  })
+  .catch( error => res.status(400).json({error}))
+});
+
+//Find users by id
+router.post('/findUsersByID', veryToken,checkRole(['Admin','USER']), (req, res, next) => {
+  //Excluir su propio ID y los IDs de los usuarios que ha bloqueado
+  const {_id} = req.body;
+
+  //Encontrar users que no tengan role de ADMIN y que no sean parte de los IDs excluidos
+  User.findById(_id)
+  .then(user => {
+    res.status(200).json({result:user});
   })
   .catch( error => res.status(400).json({error}))
 });

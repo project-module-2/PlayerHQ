@@ -14,8 +14,8 @@ const userSchema = new Schema({
     },
     avatar:{
         type:Number,
-        defalt:(Math.floor(Math.random() * 5) + 1),
-        enum:[1,2,3,4,5]
+        default:(Math.floor(Math.random() * 4)+1),
+        enum:[0,1,2,3,4]
     },
     password:{
         type:String,
@@ -25,11 +25,11 @@ const userSchema = new Schema({
         type:String,
         enum:["Xbox","Playstation","Nintendo","PC","Mobile"]
     }],
-    intereses:[{
-        type:String,
-        default:"Casual",
+    intereses:{
+        type:[String],
+        default:["Casual"],
         enum:["Casual","Competitivo","eSport"]
-    }],
+    },
     country:{
         type:String,
         enum:["Mexico","Estados Unidos","Canada"]

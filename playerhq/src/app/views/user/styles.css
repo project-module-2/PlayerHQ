@@ -1,0 +1,112 @@
+@import url('https://fonts.googleapis.com/css2?family=Raleway&display=swap');
+.bodyDiv {
+    margin: 0;
+    padding: 0;
+    background: linear-gradient(135deg, #070a0d, #121921, #0f0613);
+    background-size: cover;
+    font-family: 'Raleway', sans-serif;
+}
+
+.profileContent{
+    height: 96vh;
+    display: flex;
+	flex-direction: column;
+	justify-content: space-around;
+}
+
+.profileTop{
+    display: flex;
+	flex-direction: column;
+	align-items: center;
+
+    height: 30vh;
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center;
+}
+
+
+.userProfile {
+    display: flex;
+	flex-direction: column;
+	align-items: center;
+    margin-top: 22vh;
+}
+
+.userProfile img {
+    height: 19vh;
+    border: 20px solid #292929;
+    border-radius: 50%;
+}
+
+.profileTop span {
+    color: white;
+    font-size: 2em;
+}
+
+.profileBottom {
+    margin-top: 20vh;
+	display: flex;
+	justify-content: space-around;
+	align-content: center;
+}
+
+.profileLeft span {
+    color: #6000FC;
+    font-size: 1.7em;
+}
+
+.profileLeft .list-group {
+    height: 50vh;
+    width: 400px;
+    overflow-y: auto;
+    background-color: rgba(200, 200, 200, 0.05) !important;
+    font-size: 1.4em;
+    border: 3px solid #6000FC;
+    border-collapse: separate;
+    border-radius: 7px;
+}
+
+.profileMiddle {
+    width: 400px;
+    display: flex;
+	flex-direction: column;
+	align-items: center;
+}
+
+.profileData {
+    display: flex;
+	flex-direction: column;
+	align-items: center;
+    margin-bottom: 15px;
+    color: white;
+    font-size: 1.25em;
+}
+
+.dataTitle {
+    color: #00F0FF;
+    font-size: 1.5em;
+}
+
+.profileRight .list-group{
+    width: 400px;
+    height: 50vh;
+    overflow-y: auto;
+    background-color: rgba(200, 200, 200, 0.05) !important;
+    border: 3px solid #6000FC;
+    border-collapse: separate;
+    border-radius: 7px;
+}
+
+.profileRight {
+    font-size: 1.1em;
+}
+
+.profileRight span {
+    color: white;
+}
+
+.profileRightTitle {
+    color: #6000FC !important;
+    font-size: 1.4em;
+}
