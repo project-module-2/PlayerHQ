@@ -48,10 +48,9 @@ class Dashboard extends Component {
     componentDidMount(){
         const {user} = this.state
         const {history} = this.props
-        //Object.keys({}) noss regresa un [key,key,key]
-        console.log(Object.keys(user))
+
         if(!Object.keys(user).length || user === undefined){
-            //history.push('/')
+            history.push('/')
         }
 
         this.getDataInit();
@@ -133,12 +132,12 @@ class Dashboard extends Component {
                                     <span class="platformField">
                                         <label>Plataforma:</label>
                                         <select class="form-select" aria-label="Plataforma" name="platform" onChange={this.handleChange}>
-                                            <option selected>Donde juega</option>
-                                            <option value="Xbox">Xbox</option>
-                                            <option value="Playstation">Playstation</option>
-                                            <option value="Nintendo">Nintendo</option>
-                                            <option value="PC">PC</option>
-                                            <option value="Mobiles">Mobiles</option>
+                                            <option style={{backgroundColor:"black"}} selected>Donde juega</option>
+                                            <option style={{backgroundColor:"black"}} value="Xbox">Xbox</option>
+                                            <option style={{backgroundColor:"black"}} value="Playstation">Playstation</option>
+                                            <option style={{backgroundColor:"black"}} value="Nintendo">Nintendo</option>
+                                            <option style={{backgroundColor:"black"}} value="PC">PC</option>
+                                            <option style={{backgroundColor:"black"}} value="Mobiles">Mobiles</option>
                                         </select>
                                     </span>
                                     <span class="styleField">

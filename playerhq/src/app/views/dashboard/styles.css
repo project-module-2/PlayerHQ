@@ -154,6 +154,9 @@ label {
     font-size: 1.3em;
     width: 75%;
 }
+.selectOption *{
+    background-color: rgba(200, 200, 200, 0.1) !important;
+}
 
 .form-select {
     height: 40px;
@@ -166,7 +169,6 @@ label {
 
 .form-select:focus {
     border: 1px solid #00F0FF !important;
-
 }
 
 .gameField {
