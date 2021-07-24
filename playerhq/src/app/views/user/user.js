@@ -6,10 +6,12 @@ import {friendRequestsFromEndPoint} from '../../services/friendRequestsList';
 import {sendFriendRequestEndPoint} from '../../services/friendRequestsList';
 import {rejectFriendRequestEndPoint} from '../../services/friendRequestsList';
 import {acceptFriendRequestEndPoint} from '../../services/friendRequestsList';
+import {deleteFriendEndPoint} from '../../services/friendRequestsList';
 
 import FriendRequest from "../../components/FriendRequest";
 import Button from '../../components/Button';
 import DisplayUser from '../../components/displayUser';
+import Friend from '../../components/Friend';
 import Avatars from "../../assets/images/avatar.json";
 import Banners from "../../assets/images/banner.json";
 import './styles.css'
@@ -54,13 +56,15 @@ class User extends Component {
     }
 
     fillFriendRequestData=async(userId, friendRequestId)=>{
+        let {_friendRequests} = this.state;
         try {
             const friendRequestData = {};
             const result = await findUsersByIdEndPoint({"_id":userId});
             friendRequestData['username'] = result.data.result.username;
             friendRequestData['avatar'] = result.data.result.avatar;
             friendRequestData['friendRequestId'] = friendRequestId;
-            this.state._friendRequests.push(friendRequestData);
+            _friendRequests.push(friendRequestData);
+            this.setState({_friendRequests});
         }
         catch(error){
             console.log(error);
@@ -68,13 +72,15 @@ class User extends Component {
     }
 
     fillFriendsUserData=async(userId)=>{
+        let {_friendsData} = this.state;
         try {
             const friendData = {};
             const result = await findUsersByIdEndPoint({"_id":userId});
             friendData['username'] = result.data.result.username;
             friendData['avatar'] = result.data.result.avatar;
             friendData['_id'] = result.data.result._id;
-            this.state._friendsData.push(friendData);
+            _friendsData.push(friendData);
+            this.setState({_friendsData});
         }
         catch(error){
             console.log(error);
@@ -90,10 +96,9 @@ class User extends Component {
             const results = await findUsersByIdEndPoint({"_id":this.props.match.params.id});
             const friendRequestsList = await friendRequestsToEndPoint();
             const friendRequestsList2 = await friendRequestsFromEndPoint();
-            console.log("FRIEND REQUESTS TO",friendRequestsList);
-            console.log("FRIEND REQUESTS FROM",friendRequestsList2);
 
-            await friendRequestsList.data.result.map(element => {
+            this.setState({friendRequestDataResult:results.data.result._friends});
+            friendRequestsList.data.result.map(element => {
                 this.fillFriendRequestData(element._from, element._id);
             })
 
@@ -141,7 +146,7 @@ class User extends Component {
                 deleteFriendBtnDisplay:"none"
             }});
         }
-        else if (this.state.friends!==undefined && this.state._friends.includes(user._id)) {
+        else if (this.state.user._friends!==undefined && this.state.user._friends.includes(this.state._id)) {
             this.setState({controllerDisplay:{
                 friendsDisplay:"none",
                 friendRequestDisplay:"none",
@@ -150,7 +155,7 @@ class User extends Component {
                 deleteFriendBtnDisplay:"block"
             }});
         }
-        else {
+        else if(this.state.user._friends!==undefined && !this.state.user._friends.includes(this.state._id)) {
             this.setState({controllerDisplay:{
                 friendsDisplay:"none",
                 friendRequestDisplay:"none",
@@ -166,7 +171,6 @@ class User extends Component {
     sendFriendRequest=async()=>{
         const {user} = this.state;
         try{
-            await sendFriendRequestEndPoint({_to:user._id});
             this.setState({controllerDisplay:{
                 friendsDisplay:"none",
                 friendRequestDisplay:"none",
@@ -183,6 +187,8 @@ class User extends Component {
     rejectFriendRequest=async(id)=>{
         try{
             await rejectFriendRequestEndPoint({id:id});
+            this.setState({_friendRequests:[]});
+            this.setState({_friendsData:[]});
             await this.getDataInit();
         }
         catch(error){
@@ -191,14 +197,52 @@ class User extends Component {
     }
 
     acceptFriendRequest=async(id)=>{
-        console.log("ID",id)
         try{
             await acceptFriendRequestEndPoint({id:id});
+            this.setState({_friendRequests:[]});
+            this.setState({_friendsData:[]});
             await this.getDataInit();
         }
         catch(error){
             console.log(error);
         }
+    }
+
+    deleteFriend=async()=>{
+        try{
+            await deleteFriendEndPoint({id:this.state._id});
+            this.setState({controllerDisplay:{
+                friendsDisplay:"none",
+                friendRequestDisplay:"none",
+                editBtnDisplay:"none",
+                sendFriendRequestBtnDisplay:"block",
+                deleteFriendBtnDisplay:"none"
+            }});
+            this.setState({_friendRequests:[]});
+            this.setState({_friendsData:[]});
+            await this.getDataInit();
+        }
+        catch(error){
+            console.log(error);
+        }
+    }
+
+    seeUser=async(id)=>{
+        const {history} = this.props;
+        try{
+            history.push(`/user/${id}`)
+            window.location.reload();
+        }
+        catch(error){
+            console.log(error);
+        }
+    }
+
+
+    componentDidUpdate(prevProps,prevState){
+        window.onpopstate = e => {
+            window.location.reload();
+         }
     }
 
     async componentWillMount(){
@@ -217,6 +261,12 @@ class User extends Component {
             return (
                 <div className="bodyDiv">
                         <div className="profileContent">
+                            <div class="dashboardBtn">
+                                <Button
+                                    text="Regresar al dashboard"
+                                    onPress={()=>this.props.history.push(`/dashboard`)}
+                                />
+                            </div>
                             <div className="profileTop" style={{backgroundImage:`url("${Banners.banners[0].src}")`}} >
                                 <div className="userProfile">
                                     <img src={Avatars.avatars[this.state.avatar].src} alt="avatar"/>
@@ -231,7 +281,7 @@ class User extends Component {
                                             <DisplayUser
                                                 text={element.username}
                                                 avatarSrc={Avatars.avatars[element.avatar].src}
-                                                onPress={()=>this.props.history.push(`/user/${element._id}`)}
+                                                onPress={()=>this.seeUser(element._id)}
                                             />
                                         ))}
                                     </ul>
@@ -262,14 +312,12 @@ class User extends Component {
                                 <div className="profileRight" style={{display:this.state.controllerDisplay.friendRequestDisplay}}>
                                     <span className="profileRightTitle">Solicitudes de amistad</span>
                                     <ul className="list-group bg-transparent">
-                                        {console.log("STATE",this.state)}
-                                        {console.log("FRIEND REQUESTS DESDE EL RENDER ",this.state._friendRequests)}
                                         {this.state._friendRequests.map(element=>(
                                             <FriendRequest
                                                 username = {element.username}
                                                 avatarSrc = {Avatars.avatars[element.avatar].src}
                                                 message="Quiere ser tu amigo"
-                                                onPress={()=>this.props.history.push(`/user/${element._from}`)}
+                                                onPress={()=>this.seeUser(element._from)}
                                                 acceptOnPress={()=>this.acceptFriendRequest(element.friendRequestId)}
                                                 rejectOnPress={()=>this.rejectFriendRequest(element.friendRequestId)}
                                             />
@@ -281,27 +329,21 @@ class User extends Component {
                                 <span style={{display:this.state.controllerDisplay.sendFriendRequestBtnDisplay}}>
                                     <Button
                                         text="Enviar solicitud de amistad"
-                                        onPress={()=> {}}
+                                        onPress={()=> this.sendFriendRequest(this.state.user.id)}
                                     />
                                 </span>
                                 <span style={{display:this.state.controllerDisplay.deleteFriendBtnDisplay}}>
                                     <Button
                                         text="Eliminar amigo"
-                                        onPress={()=>{}}
+                                        onPress={()=>this.deleteFriend()}
                                     />
                                 </span>
-                                <span style={{display:this.state.controllerDisplay.editBtnDisplay}}>
+                                {/*<span style={{display:this.state.controllerDisplay.editBtnDisplay}}>
                                     <Button
                                         text="Editar mi perfil"
                                         onPress={()=> {}}
                                     />
-                                </span>
-                                <span style={{display:'block'}}>
-                                    <Button
-                                        text="test refresh"
-                                        onPress={()=> this.setState({loaded:true})}
-                                    />
-                                </span>
+                                        </span>*/}
                             </div>
                         </div>
                     </div>

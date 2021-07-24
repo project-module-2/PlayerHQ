@@ -3,7 +3,7 @@ import axios from "axios";
 //indica si está deployada o no
 const isProduction = process.env.NODE_ENV === "production";
 
-const baseURL = isProduction ? "https://arena-gg.herokuapp.com/api" : "http://localhost:3007/api";
+const baseURL = isProduction ? "www.paginadploy.com/api" : "http://localhost:3008/api";
 
 axios.defaults.withCredentials = true
 

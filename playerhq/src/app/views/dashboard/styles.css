@@ -21,6 +21,13 @@
 	align-items: stretch;
 }
 
+.dashboardBtn {
+    position: fixed;
+    width: 200px;
+    left: 1%;
+    top:1%
+}
+
 .dashboardLeft {
     padding-top: 2%;
     width: 15%;
