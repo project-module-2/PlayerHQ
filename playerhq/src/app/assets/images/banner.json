@@ -1,0 +1,7 @@
+{
+    "banners":[
+        {"src":"https://res.cloudinary.com/arenagoodgame/image/upload/v1626557301/arena_banners/banner_1.jpg"},
+        {"src":"https://res.cloudinary.com/arenagoodgame/image/upload/v1626557297/arena_banners/banner_2.jpg"},
+        {"src":"https://res.cloudinary.com/arenagoodgame/image/upload/v1626557296/arena_banners/banner_3.jpg"}
+    ]
+}
