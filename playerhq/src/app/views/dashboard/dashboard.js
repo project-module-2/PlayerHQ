@@ -1,10 +1,11 @@
-import React, {Component} from "react"
+import React, {Component} from "react";
 import logo from '../../assets/images/logo_color.png';
 import profile from '../../assets/icons/profile.png';
 
 import { PopularUsersEndPoint } from "../../services/popularUsers";
 import { findUsersEndPoint } from "../../services/findUsers";
 import {loginEndpoint} from '../../services/auth-ws'
+import {logoutEndpoint} from '../../services/auth-ws'
 
 import Button from '../../components/Button';
 import DisplayUser from '../../components/displayUser'
@@ -19,6 +20,7 @@ class Dashboard extends Component {
     state={
         user: JSON.parse(localStorage.getItem("user")) || {},
         isOpenAdmin:false,
+        userAvatar: "",
         popularUsers:[],
         tableResult:[],
         data:{
@@ -34,11 +36,8 @@ class Dashboard extends Component {
             await loginEndpoint({email:"miEmail@email2.com",password:"pass123"});
             const popularUsersArr = await PopularUsersEndPoint();
             this.setState({popularUsers:popularUsersArr.data.result});
-            this.state.popularUsers.map((element)=>{
-                console.log(element._id);
-                console.log(element.username);
-                console.log(element.avatar);
-            })
+            this.setState({userAvatar:Avatars.avatars[this.state.user.avatar].src})
+            console.log("USER AVATAR",this.state.userAvatar);
         }
         catch(error){
             console.log(error);
@@ -48,12 +47,18 @@ class Dashboard extends Component {
     componentDidMount(){
         const {user} = this.state
         const {history} = this.props
-
+        console.log(user);
         if(!Object.keys(user).length || user === undefined){
             history.push('/')
         }
 
         this.getDataInit();
+    }
+
+    logout(){
+        const {history} = this.props;
+        logoutEndpoint();
+        history.push('/');
     }
 
     handleChange=(e)=>{
@@ -72,6 +77,7 @@ class Dashboard extends Component {
                 try {
                     const results = await findUsersEndPoint(data);
                     this.setState({tableResult:results.data.result});
+                    console.log(this.state.tableResult)
                 }
                 catch(error){
                     console.log(error);
@@ -82,12 +88,12 @@ class Dashboard extends Component {
 
     render() {
         return (
-            <div class="bodyDiv">
-                    <div class="dashboardContent">
-                        <div class="dashboardLeft">
-                            <img class="dashboardLogo" src={logo} alt="Logo"></img>
-                            <div class="popularUsers">
-                                <ul class="list-group bg-transparent">
+            <div className="bodyDiv">
+                    <div className="dashboardContent">
+                        <div className="dashboardLeft">
+                            <img className="dashboardLogo" src={logo} alt="Logo"></img>
+                            <div className="popularUsers">
+                                <ul className="list-group bg-transparent">
                                     {this.state.popularUsers.map(element=>(
                                         <DisplayUser
                                             text={element.username}
@@ -98,23 +104,27 @@ class Dashboard extends Component {
                                 </ul>
                             </div>
                         </div>
-                        <div class="dashboardRight">
-                            <div class="head">
+                        <div className="dashboardRight">
+                            <div className="head">
                                 <span>Explora</span>
                                 <div>
-                                    <a href=''><img className="profileIcon" src={profile} alt="profile icon"/>ASDASDASDASDASDASDASDASDASDAS</a>
+                                    <DisplayUser
+                                        text={this.state.user.username}
+                                        avatarSrc={this.state.userAvatar}
+                                        onPress={()=>this.props.history.push(`/user/${this.state.user._id}`)}
+                                    />
                                     <Button
                                         text="Logout"
-                                        onPress={()=> console.log("LOGOUT")}
+                                        onPress={()=> this.logout()}
                                     />
                                 </div>
                             </div>
-                            <form onSubmit={this.handleSubmit} class="buscador">
+                            <form onSubmit={this.handleSubmit} className="buscador">
                                 <span>
                                 ¡Busca personas para jugar!
                                 </span>
-                                <div class="buscadorTop">
-                                    <span class="userField">
+                                <div className="buscadorTop">
+                                    <span className="userField">
                                         <label>Usuario:</label>
                                         <Textfield
                                             name='user'
@@ -128,10 +138,10 @@ class Dashboard extends Component {
                                         //onPress={()=> this.searchUsers()}
                                     />
                                 </div>
-                                <div class="buscadorBot">
-                                    <span class="platformField">
+                                <div className="buscadorBot">
+                                    <span className="platformField">
                                         <label>Plataforma:</label>
-                                        <select class="form-select" aria-label="Plataforma" name="platform" onChange={this.handleChange}>
+                                        <select className="form-select" aria-label="Plataforma" name="platform" onChange={this.handleChange}>
                                             <option style={{backgroundColor:"black"}} selected>Donde juega</option>
                                             <option style={{backgroundColor:"black"}} value="Xbox">Xbox</option>
                                             <option style={{backgroundColor:"black"}} value="Playstation">Playstation</option>
@@ -140,17 +150,17 @@ class Dashboard extends Component {
                                             <option style={{backgroundColor:"black"}} value="Mobiles">Mobiles</option>
                                         </select>
                                     </span>
-                                    <span class="styleField">
+                                    <span className="styleField">
                                         <label>Estilo:</label>
-                                        <select class="form-select" aria-label="Estilo" name="style" onChange={this.handleChange}>
-                                            <option selected>Estilo de juego</option>
-                                            <option value="Casual">Casual</option>
-                                            <option value="Competitivo">Competitivo</option>
-                                            <option value="eSport">eSport</option>
+                                        <select className="form-select" aria-label="Estilo" name="style" onChange={this.handleChange}>
+                                            <option style={{backgroundColor:"black"}} selected>Estilo de juego</option>
+                                            <option style={{backgroundColor:"black"}} value="Casual">Casual</option>
+                                            <option style={{backgroundColor:"black"}} value="Competitivo">Competitivo</option>
+                                            <option style={{backgroundColor:"black"}} value="eSport">eSport</option>
                                         </select>
                                     </span>
 
-                                    <span class="gameField">
+                                    <span className="gameField">
                                         <label>Juego favorito:</label>
                                         <Textfield
                                             name='favoriteGame'
@@ -161,8 +171,8 @@ class Dashboard extends Component {
                                     </span>
                                 </div>
                             </form>
-                            <div class="tablaUsuarios">
-                                <table class="table table-striped table-dark">
+                            <div className="tablaUsuarios">
+                                <table className="table table-striped table-dark">
                                     <thead>
                                         <tr>
                                             <th scope="col">Usuario</th>
@@ -176,8 +186,8 @@ class Dashboard extends Component {
                                             <tr>
                                                 <td onClick={()=>this.props.history.push(`/user/${element._id}`)}>{element.username}</td>
                                                 <td>{element.favoriteGame}</td>
-                                                <td>{element.style}</td>
-                                                <td>{element.platform}</td>
+                                                <td>{element.intereses}</td>
+                                                <td>{element.platforms}</td>
                                             </tr>
                                         ))}
                                     </tbody>

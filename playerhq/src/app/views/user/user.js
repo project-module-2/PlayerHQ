@@ -2,6 +2,7 @@ import React, {Component} from "react"
 
 import {findUsersByIdEndPoint} from '../../services/findUserById';
 import {friendRequestsToEndPoint} from '../../services/friendRequestsList';
+import {friendRequestsFromEndPoint} from '../../services/friendRequestsList';
 import {sendFriendRequestEndPoint} from '../../services/friendRequestsList';
 import {rejectFriendRequestEndPoint} from '../../services/friendRequestsList';
 import {acceptFriendRequestEndPoint} from '../../services/friendRequestsList';
@@ -46,7 +47,8 @@ class User extends Component {
         steamUsername:"",
         playstationUsername:"",
         nintendoUsername:"",
-        _friends:[],
+        _friendsIds:[],
+        _friendsData:[],
         _friendRequests:[],
         loaded:false
     }
@@ -65,6 +67,20 @@ class User extends Component {
         }
     }
 
+    fillFriendsUserData=async(userId)=>{
+        try {
+            const friendData = {};
+            const result = await findUsersByIdEndPoint({"_id":userId});
+            friendData['username'] = result.data.result.username;
+            friendData['avatar'] = result.data.result.avatar;
+            friendData['_id'] = result.data.result._id;
+            this.state._friendsData.push(friendData);
+        }
+        catch(error){
+            console.log(error);
+        }
+    }
+
     getDataInit=async()=>{
         console.log("USER",this.state.user);
         const {user} = this.state;
@@ -72,10 +88,17 @@ class User extends Component {
 
         try {
             const results = await findUsersByIdEndPoint({"_id":this.props.match.params.id});
-            const friendRequestsList = await friendRequestsToEndPoint({"_id":this.props.match.params.id});
+            const friendRequestsList = await friendRequestsToEndPoint();
+            const friendRequestsList2 = await friendRequestsFromEndPoint();
+            console.log("FRIEND REQUESTS TO",friendRequestsList);
+            console.log("FRIEND REQUESTS FROM",friendRequestsList2);
 
             await friendRequestsList.data.result.map(element => {
                 this.fillFriendRequestData(element._from, element._id);
+            })
+
+            await results.data.result._friends.map(element => {
+                this.fillFriendsUserData(element);
             })
 
             this.setState({
@@ -91,7 +114,8 @@ class User extends Component {
                 xboxGamertag:results.data.result.xboxGamertag,
                 steamUsername:results.data.result.steamUsername,
                 playstationUsername:results.data.result.playstationUsername,
-                nintendoUsername:results.data.result.nintendoUsername
+                nintendoUsername:results.data.result.nintendoUsername,
+                _friendsIds:results.data.result._friends
             });
         }
         catch(error){
@@ -117,7 +141,7 @@ class User extends Component {
                 deleteFriendBtnDisplay:"none"
             }});
         }
-        else if (this.state._friends.includes(user._id)) {
+        else if (this.state.friends!==undefined && this.state._friends.includes(user._id)) {
             this.setState({controllerDisplay:{
                 friendsDisplay:"none",
                 friendRequestDisplay:"none",
@@ -143,6 +167,13 @@ class User extends Component {
         const {user} = this.state;
         try{
             await sendFriendRequestEndPoint({_to:user._id});
+            this.setState({controllerDisplay:{
+                friendsDisplay:"none",
+                friendRequestDisplay:"none",
+                editBtnDisplay:"none",
+                sendFriendRequestBtnDisplay:"none",
+                deleteFriendBtnDisplay:"none"
+            }});
         }
         catch(error){
             console.log(error);
@@ -151,19 +182,22 @@ class User extends Component {
 
     rejectFriendRequest=async(id)=>{
         try{
-
+            await rejectFriendRequestEndPoint({id:id});
+            await this.getDataInit();
         }
-        catch{
-
+        catch(error){
+            console.log(error);
         }
     }
 
     acceptFriendRequest=async(id)=>{
+        console.log("ID",id)
         try{
-
+            await acceptFriendRequestEndPoint({id:id});
+            await this.getDataInit();
         }
-        catch{
-
+        catch(error){
+            console.log(error);
         }
     }
 
@@ -181,60 +215,42 @@ class User extends Component {
     showRender() {
         if(this.state.loaded) {
             return (
-                <div class="bodyDiv">
-                        <div class="profileContent">
-                            <div class="profileTop" style={{backgroundImage:`url("${Banners.banners[0].src}")`}} >
-                                <div class="userProfile">
+                <div className="bodyDiv">
+                        <div className="profileContent">
+                            <div className="profileTop" style={{backgroundImage:`url("${Banners.banners[0].src}")`}} >
+                                <div className="userProfile">
                                     <img src={Avatars.avatars[this.state.avatar].src} alt="avatar"/>
                                     <span>{this.state.username}</span>
                                 </div>
                             </div>
-                            <div class="profileBottom">
-                                <div class="profileLeft" style={{display:this.state.controllerDisplay.friendsDisplay}}>
+                            <div className="profileBottom">
+                                <div className="profileLeft" style={{display:this.state.controllerDisplay.friendsDisplay}}>
                                     <span>Tus amigos +</span>
-                                    <ul class="list-group bg-transparent">
-                                        <DisplayUser
-                                            text="amigo 1"
-                                            avatarSrc={Avatars.avatars[0].src}
-                                            onPress={()=>console.log("amigo 1")}
-                                        />
-                                        <DisplayUser
-                                            text="amigo 2"
-                                            avatarSrc={Avatars.avatars[1].src}
-                                            onPress={()=>console.log("amigo 2")}
-                                        />
-                                        <DisplayUser
-                                            text="amigo 3"
-                                            avatarSrc={Avatars.avatars[2].src}
-                                            onPress={()=>console.log("amigo 3")}
-                                        />
-                                        <DisplayUser
-                                            text="Mi username muy largo"
-                                            avatarSrc={Avatars.avatars[3].src}
-                                            onPress={()=>console.log("Mi username muy largo")}
-                                        />
-                                        <DisplayUser
-                                            text="amigo 5"
-                                            avatarSrc={Avatars.avatars[4].src}
-                                            onPress={()=>console.log("amigo 5")}
-                                        />
+                                    <ul className="list-group bg-transparent">
+                                        {this.state._friendsData.map(element=>(
+                                            <DisplayUser
+                                                text={element.username}
+                                                avatarSrc={Avatars.avatars[element.avatar].src}
+                                                onPress={()=>this.props.history.push(`/user/${element._id}`)}
+                                            />
+                                        ))}
                                     </ul>
                                 </div>
-                                <div class="profileMiddle">
-                                    <div class="profileData">
-                                        <span class="dataTitle">Videojuego favorito:</span>
+                                <div className="profileMiddle">
+                                    <div className="profileData">
+                                        <span className="dataTitle">Videojuego favorito:</span>
                                         <span>{this.state.favoriteGame}</span>
                                     </div>
-                                    <div class="profileData">
-                                        <span class="dataTitle">Estilo de juego:</span>
+                                    <div className="profileData">
+                                        <span className="dataTitle">Estilo de juego:</span>
                                         <span>{this.state.intereses[0]}</span>
                                     </div>
-                                    <div class="profileData">
-                                        <span class="dataTitle">Plataforma:</span>
+                                    <div className="profileData">
+                                        <span className="dataTitle">Plataforma:</span>
                                         <span>{this.state.platforms}</span>
                                     </div>
-                                    <div class="profileData">
-                                        <span class="dataTitle">Canales:</span>
+                                    <div className="profileData">
+                                        <span className="dataTitle">Canales:</span>
                                         <span style={{display:this.state.channelsDisplay.twitchDisplay}}>Twitch: {this.state.twitch}</span>
                                         <span style={{display:this.state.channelsDisplay.discordDisplay}}>Discord: {this.state.discord}</span>
                                         <span style={{display:this.state.channelsDisplay.steamUsernameDisplay}}>Steam: {this.state.steamUsername}</span>
@@ -243,9 +259,9 @@ class User extends Component {
                                         <span style={{display:this.state.channelsDisplay.nintendoUsernameDisplay}}>Nintendo: {this.state.nintendoUsername}</span>
                                     </div>
                                 </div>
-                                <div class="profileRight" style={{display:this.state.controllerDisplay.friendRequestDisplay}}>
-                                    <span class="profileRightTitle">Solicitudes de amistad</span>
-                                    <ul class="list-group bg-transparent">
+                                <div className="profileRight" style={{display:this.state.controllerDisplay.friendRequestDisplay}}>
+                                    <span className="profileRightTitle">Solicitudes de amistad</span>
+                                    <ul className="list-group bg-transparent">
                                         {console.log("STATE",this.state)}
                                         {console.log("FRIEND REQUESTS DESDE EL RENDER ",this.state._friendRequests)}
                                         {this.state._friendRequests.map(element=>(
@@ -253,15 +269,15 @@ class User extends Component {
                                                 username = {element.username}
                                                 avatarSrc = {Avatars.avatars[element.avatar].src}
                                                 message="Quiere ser tu amigo"
-                                                userOnPress={()=>console.log("userOnPress")}
-                                                acceptOnPress={()=>console.log("acceptOnPress")}
-                                                rejectOnPress={()=>console.log("rejectOnPress")}
+                                                onPress={()=>this.props.history.push(`/user/${element._from}`)}
+                                                acceptOnPress={()=>this.acceptFriendRequest(element.friendRequestId)}
+                                                rejectOnPress={()=>this.rejectFriendRequest(element.friendRequestId)}
                                             />
                                         ))}
                                     </ul>
                                 </div>
                             </div>
-                            <div class="profileControls">
+                            <div className="profileControls">
                                 <span style={{display:this.state.controllerDisplay.sendFriendRequestBtnDisplay}}>
                                     <Button
                                         text="Enviar solicitud de amistad"
