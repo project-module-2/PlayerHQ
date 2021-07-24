@@ -28,12 +28,12 @@ export default class Auth  extends Component{
          const {match,history} = this.props
          const {user} = this.state
          e.preventDefault()
-                         //
+        //
          const perroPromise = () => match.path === "/signup" ? signupEndpoint(user) : loginEndpoint(user);
          perroPromise()
              .then(res=>{
-                 localStorage.setItem( "user",JSON.stringify(res.data.result) ) 
-                 history.push('/main')
+                 localStorage.setItem( "user",JSON.stringify(res.data.result) )
+                 history.push('/dashboard')
              })
              .catch(error =>{
                  console.log("error",error)
@@ -92,7 +92,6 @@ export default class Auth  extends Component{
                      } tienes cuenta? |`}
                          <Link to={match.path !== "/signup" ? "/signup" :"/login" }>Dale aqui</Link>
                      </span>
-                     
                  </div>
                  <img src={sider} width='36%'/>
 
