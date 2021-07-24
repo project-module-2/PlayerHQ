@@ -32,12 +32,13 @@ class Dashboard extends Component {
     }
 
     getDataInit=async()=>{
+        let {popularUsers, userAvatar} = this.state;
         try{
-            await loginEndpoint({email:"miEmail@email2.com",password:"pass123"});
             const popularUsersArr = await PopularUsersEndPoint();
-            this.setState({popularUsers:popularUsersArr.data.result});
-            this.setState({userAvatar:Avatars.avatars[this.state.user.avatar].src})
-            console.log("USER AVATAR",this.state.userAvatar);
+            popularUsers = popularUsersArr.data.result;
+            userAvatar = Avatars.avatars[this.state.user.avatar].src;
+            this.setState({popularUsers});
+            this.setState({userAvatar});
         }
         catch(error){
             console.log(error);
