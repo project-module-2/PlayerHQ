@@ -4,6 +4,7 @@ import testbanner  from "../../assets/images/1.jpg"
 import testavatar from "../../assets/images/1ccf5087-4b44-4d0a-b8e3-84da3ec3afd4.png"
 import logo from '../../assets/images/logo_color.png';
 import Button from '../../components/Button';
+import {updateUser} from "../../services/user-ws";
 
 
 
@@ -40,6 +41,21 @@ class EditProfile extends React.Component {
         this.setState({
             [event.target.id]: event.target.value
         })
+    }
+    handleSubmit=(e)=>{
+        const {history} = this.props
+        const {user} = this.state
+        e.preventDefault()
+       //
+        const profilepromise = () => 
+        profilepromise()
+            .then(res=>{
+                localStorage.setItem( "user",JSON.stringify(res.data.result) )
+                history.push('/dashboard')
+            })
+            .catch(error =>{
+                console.log("error",error)
+            })
     }
     
    
