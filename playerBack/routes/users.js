@@ -76,10 +76,10 @@ router.post('/findUsers', veryToken,checkRole(['Admin','USER']), (req, res, next
   User.find({
     $nor:[{role:'ADMIN'}],
     $and:[{_id: {$nin:excludedIds}},{_blocked: {$nin:[req.user._id]}}],
-    //platforms: {$elemMatch:{$regex:`.*${platform}.*`}},
-    //intereses: {$elemMatch:{$regex:`.*${style}.*`}},
-    //favoriteGame: {$regex:`.*${favoriteGame}.*`},
-    username: {$regex:`.*${user}.*`}
+    $and:[{platforms:{$regex:`.*${platform}.*`, $options:'i'}},
+        {intereses:{$regex:`.*${style}.*`, $options:'i'}},
+        {favoriteGame:{$regex:`.*${favoriteGame}.*`, $options:'i'}},
+        {username:{$regex:`.*${user}.*`, $options:'i'}}]
   })
   .limit(100)
   .then(users => {

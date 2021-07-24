@@ -21,10 +21,11 @@ const userSchema = new Schema({
         type:String,
         required:[true,"Debes agregar una contraseña"]
     },
-    platforms:[{
+    platforms:{
         type:String,
-        enum:["Xbox","Playstation","Nintendo","PC","Mobile"]
-    }],
+        default:"",
+        enum:["","Xbox","Playstation","Nintendo","PC","Mobile"],
+    },
     intereses:{
         type:[String],
         default:["Casual"],
@@ -39,7 +40,8 @@ const userSchema = new Schema({
         enum:["Español","Ingles","Frances","Otro"]
     }],
     favoriteGame: {
-        type:String
+        type:String,
+        default:""
     },
     mainLanguage: {
         type:String
