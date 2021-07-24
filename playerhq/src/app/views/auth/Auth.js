@@ -36,7 +36,7 @@ export default class Auth  extends Component{
                  history.push('/dashboard')
              })
              .catch(error =>{
-                 console.log("error",error)
+                 console.log("error",error.response)
              })
      }
      render(){
@@ -54,7 +54,7 @@ export default class Auth  extends Component{
                          <img src={logo} width='20%'/>
                          {match.path === "/signup" &&
                                  <TextInput
-                                 name='name'
+                                 name='username'
                                  textLabel= 'Nombre'
                                  placeholder='John Snow'
                                  handleChange={handleChange}
