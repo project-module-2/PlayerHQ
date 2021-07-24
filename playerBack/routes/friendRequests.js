@@ -53,7 +53,7 @@ router.patch('/createFriendRequest', veryToken, checkRole(['Admin','USER']), (re
 });
 
 //Encontrar todos los requests creados por el usuario, tiene que estar logueado
-router.post('/friendRequestsFrom', veryToken, checkRole(['Admin','USER']), (req, res, next) => {
+router.get('/friendRequestsFrom', veryToken, checkRole(['Admin','USER']), (req, res, next) => {
   console.log(req.user._id);
   FriendRequest.find({_from: req.user._id, status:"pending"})
   .then(requests => {
@@ -63,7 +63,8 @@ router.post('/friendRequestsFrom', veryToken, checkRole(['Admin','USER']), (req,
 });
 
 //Encontrar todos los requests realizados hacia el usuario, tiene que estar logueado
-router.post('/friendRequestsTo', veryToken, checkRole(['Admin','USER']), (req, res, next) => {
+router.get('/friendRequestsTo', veryToken, checkRole(['Admin','USER']), (req, res, next) => {
+  console.log(req.user._id);
   FriendRequest.find({_to: req.user._id, status:"pending"})
   .then(requests => {
     res.status(200).json({result:requests})
